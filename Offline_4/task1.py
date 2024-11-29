@@ -57,3 +57,12 @@ def inverse_discrete_fourier_transform(signal_tuple):
             angle = 2 * np.pi * k * i / n
             signal[i] += real[k] * np.cos(angle) - imaginary[k] * np.sin(angle)
     return signal/n
+
+def cross_correlation(signal_A, signal_B):
+    real_A, imaginary_A = discrete_fourier_transform(signal_A)
+    real_B, imaginary_B = discrete_fourier_transform(signal_B)
+    multiplied_real = real_A * real_B - imaginary_A * imaginary_B
+    multiplied_imaginary = real_A * imaginary_B + imaginary_A * real_B
+    multiplied_signal = (multiplied_real, multiplied_imaginary)
+    return inverse_discrete_fourier_transform(multiplied_signal)
+
