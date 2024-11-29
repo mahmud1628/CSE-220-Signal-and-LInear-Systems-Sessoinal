@@ -114,7 +114,7 @@ def plot_frequency_spectrum_B(dft_signal_B):
 
 def plot_cross_correlation(cross_correlation_values):
     plt.figure(figsize=(6, 6))
-    plt.stem(samples,cross_correlation_values,linefmt='g-',basefmt='g-')
+    plt.stem(samples - 25, np.roll(cross_correlation_values,25), linefmt='g-', basefmt='g-')
     plt.title("DFT-based Cross-Correlation")
     plt.xlabel("Lag (samples)")
     plt.ylabel("Correlation")
