@@ -68,6 +68,75 @@ def cross_correlation(signal_A, signal_B):
 
 def sample_lag(signal_A, signal_B):
     cross_correlation_values = cross_correlation(signal_A, signal_B)
-    max_index = np.argmax(cross_correlation_values)
-    return max_index
+    index = 0
+    for i in range(0,len(cross_correlation_values)):
+        if(cross_correlation_values[i]>cross_correlation_values[index]):
+            index = i
 
+    if(index>n//2):
+        index-=n
+    return index
+
+def calculate_distance(lag):
+    return abs(lag) * wave_velocity / sampling_rate
+
+def plot_signal_A(signal_A):
+    plt.figure(figsize=(6, 6))
+    plt.stem(samples,signal_A, basefmt='b-')
+    plt.title("Signal A (Station A)")
+    plt.xlabel("Sample Index")
+    plt.ylabel("Amplitude")
+    plt.show()
+
+def plot_signal_B(signal_B):
+    plt.figure(figsize=(6, 6))
+    plt.stem(samples,signal_B , linefmt='r-')
+    plt.title("Signal B (Station B)")
+    plt.xlabel("Sample Index")
+    plt.ylabel("Amplitude")
+    plt.show()
+
+def plot_frequency_spectrum_A(dft_signal_A):
+    plt.figure(figsize=(6, 6))
+    plt.stem(samples,np.sqrt(dft_signal_A[0] ** 2 + dft_signal_A[1] ** 2),basefmt='b-')
+    plt.title("Frequency Spectrum of Signal A")
+    plt.xlabel("Sample Index")
+    plt.ylabel("Amplitude")
+    plt.show()
+
+def plot_frequency_spectrum_B(dft_signal_B):
+    plt.figure(figsize=(6, 6))
+    plt.stem(samples,np.sqrt(dft_signal_B[0] ** 2+dft_signal_B[1] ** 2),linefmt='r-')
+    plt.title("Frequency Spectrum of Signal B")
+    plt.xlabel("Sample Index")
+    plt.ylabel("Amplitude")
+    plt.show()
+
+def plot_cross_correlation(cross_correlation_values):
+    plt.figure(figsize=(6, 6))
+    plt.stem(samples,cross_correlation_values,linefmt='g-',basefmt='g-')
+    plt.title("DFT-based Cross-Correlation")
+    plt.xlabel("Lag (samples)")
+    plt.ylabel("Correlation")
+    plt.show()
+
+def main():
+    signal_A, signal_B = generate_signals()
+    dft_signal_A = discrete_fourier_transform(signal_A)
+    dft_signal_B = discrete_fourier_transform(signal_B)
+
+    plot_signal_A(signal_A)
+    plot_frequency_spectrum_A(dft_signal_A)
+
+    plot_signal_B(signal_B)
+    plot_frequency_spectrum_B(dft_signal_B)
+
+    cross_correlation_values = cross_correlation(signal_A, signal_B)
+    plot_cross_correlation(cross_correlation_values)
+
+    lag = sample_lag(signal_A, signal_B)
+    distance = calculate_distance(lag)
+    print(f"Lag: {lag}")
+    print(f"Distance between the stations: {distance} meters")
+
+main()
