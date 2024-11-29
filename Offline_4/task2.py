@@ -44,15 +44,14 @@ def FFT(signal):
         return real,imaginary
     
     real_even = real[::2]
-    imaginary_even = imaginary[::2]
     real_odd = real[1::2]
+    imaginary_even = imaginary[::2]
     imaginary_odd = imaginary[1::2]
     
     result_real_even, result_imaginary_even = FFT((real_even, imaginary_even))
     result_real_odd, result_imaginary_odd = FFT((real_odd, imaginary_odd))
 
-    result_real = np.zeros(n)
-    result_imaginary = np.zeros(n)
+    result_real, result_imaginary = np.zeros(n), np.zeros(n)
 
     for i in range(0,n//2):
         twiddle_factor_real = np.cos(2 * np.pi * i / n)
@@ -67,8 +66,8 @@ def FFT(signal):
 
 def IFFT(signal_tuple):
     n = len(signal_tuple[0])
-    signal_real, signal_imaginary = recursiveIFFT(signal_tuple)
-    return signal_real/n
+    signal = recursiveIFFT(signal_tuple)
+    return signal[0] / n
         
 def recursiveIFFT(signal_tuple):
     real, imaginary = signal_tuple
@@ -83,15 +82,14 @@ def recursiveIFFT(signal_tuple):
         return real,imaginary
     
     real_even = real[::2]
-    imaginary_even = imaginary[::2]
     real_odd = real[1::2]
+    imaginary_even = imaginary[::2]
     imaginary_odd = imaginary[1::2]
     
     result_real_even, result_imaginary_even = recursiveIFFT((real_even, imaginary_even))
     result_real_odd, result_imaginary_odd = recursiveIFFT((real_odd, imaginary_odd))
 
-    result_real = np.zeros(n)
-    result_imaginary = np.zeros(n)
+    result_real, result_imaginary = np.zeros(n), np.zeros(n)
 
     for i in range(0,n//2):
         twiddle_factor_real = np.cos(2 * np.pi * i / n)
@@ -105,22 +103,16 @@ def recursiveIFFT(signal_tuple):
     return result_real,result_imaginary
 
 
-average_time_dft = []
-average_time_fft = []
-average_time_idft = []
-average_time_ifft = []
+average_time_dft, average_time_fft, average_time_idft, average_time_ifft = [], [], [], []
 
 N = 10
 
-sizes = [2**i for i in range(1, 10)] 
+signal_sizes = [2 ** i for i in range(1, 10)] 
 
-for n in sizes:
-    signals = [np.random.rand(n) for _ in range(N)]
+for n in signal_sizes:
+    signals = [np.random.rand(n) for s in range(N)]
 
-    time_dft = 0
-    time_fft = 0
-    time_idft = 0
-    time_ifft = 0
+    time_dft, time_fft, time_idft, time_ifft = 0, 0, 0, 0
 
     for signal in signals:
 
@@ -147,25 +139,25 @@ for n in sizes:
 
 
 plt.figure(figsize=(10, 6))
-plt.plot(sizes, average_time_dft, label='DFT', color='red')
-plt.plot(sizes, average_time_fft, label='FFT', color='green')
+plt.plot(signal_sizes, average_time_dft, label='DFT', color='red')
+plt.plot(signal_sizes, average_time_fft, label='FFT', color='green')
 plt.title('Comparison between DFT and FFT')
+plt.grid(True)
 plt.xlabel('size')
 plt.ylabel('time')
 plt.xscale('log', base = 2)
 plt.yscale('log')
 plt.legend()
-plt.grid(True)
 plt.show()
 
 plt.figure(figsize=(10, 6))
-plt.plot(sizes, average_time_idft, label='IDFT', color='red')
-plt.plot(sizes, average_time_ifft, label='IFFT', color='green')
+plt.plot(signal_sizes, average_time_idft, label='IDFT', color='red')
+plt.plot(signal_sizes, average_time_ifft, label='IFFT', color='green')
 plt.title('Comparison between IDFT and IFFT')
+plt.grid(True)
 plt.xlabel('size')
 plt.ylabel('time')
 plt.xscale('log', base = 2)
 plt.yscale('log')
 plt.legend()
-plt.grid(True)
 plt.show()
