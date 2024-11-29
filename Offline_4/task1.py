@@ -66,3 +66,8 @@ def cross_correlation(signal_A, signal_B):
     multiplied_signal = (multiplied_real, multiplied_imaginary)
     return inverse_discrete_fourier_transform(multiplied_signal)
 
+def sample_lag(signal_A, signal_B):
+    cross_correlation_values = cross_correlation(signal_A, signal_B)
+    max_index = np.argmax(cross_correlation_values)
+    return max_index
+
