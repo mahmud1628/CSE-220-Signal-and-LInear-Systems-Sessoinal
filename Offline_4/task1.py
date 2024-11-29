@@ -39,3 +39,13 @@ def generate_signals(frequency=5):
     return signal_A, signal_B
 
 #implement other functions and logic
+def discrete_fourier_transform(signal):
+    real = np.zeros(n)
+    imaginary = np.zeros(n)
+    for k in range(n):
+        for i in range(n):
+            angle = 2 * np.pi * k * i / n
+            real[k] += signal[i] * np.cos(angle)
+            imaginary[k] -= signal[i] * np.sin(angle)
+    return real, imaginary
+
