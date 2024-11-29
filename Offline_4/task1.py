@@ -49,3 +49,11 @@ def discrete_fourier_transform(signal):
             imaginary[k] -= signal[i] * np.sin(angle)
     return real, imaginary
 
+def inverse_discrete_fourier_transform(signal_tuple):
+    real, imaginary = signal_tuple
+    signal = np.zeros(n)
+    for i in range(n):
+        for k in range(n):
+            angle = 2 * np.pi * k * i / n
+            signal[i] += real[k] * np.cos(angle) - imaginary[k] * np.sin(angle)
+    return signal/n
